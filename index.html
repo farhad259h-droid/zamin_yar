@@ -1,13 +1,370 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>زمین‌یار</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>زمین‌یار</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Tahoma, Arial, sans-serif;
+    background: #f3f5f7;
+    color: #222;
+}
+
+.container {
+    width: min(94%, 700px);
+    margin: 20px auto;
+}
+
+.header {
+    background: #1f2937;
+    color: white;
+    padding: 18px;
+    border-radius: 16px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.header h1 {
+    margin: 0 0 6px;
+    font-size: 25px;
+}
+
+.header p {
+    margin: 0;
+    opacity: .85;
+}
+
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 15px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.08);
+}
+
+.inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.input-box label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccd2d8;
+    border-radius: 10px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.land-area {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+svg {
+    width: 100%;
+    height: 360px;
+    background: #fafafa;
+    border-radius: 14px;
+    border: 1px solid #ddd;
+}
+
+.land {
+    fill: #dcefd8;
+    stroke: #216e39;
+    stroke-width: 3;
+}
+
+.side-label {
+    font-size: 16px;
+    font-weight: bold;
+    fill: #111;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+button {
+    border: none;
+    border-radius: 10px;
+    padding: 12px 8px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.save {
+    background: #2563eb;
+    color: white;
+}
+
+.clear {
+    background: #dc2626;
+    color: white;
+}
+
+.reset {
+    background: #6b7280;
+    color: white;
+}
+
+.note {
+    text-align: center;
+    color: #666;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+@media (max-width: 500px) {
+    .inputs {
+        grid-template-columns: 1fr;
+    }
+
+    svg {
+        height: 300px;
+    }
+
+    .buttons {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
 </head>
 
 <body>
-  <h1>زمین‌یار</h1>
-  <p>نسخه اول برنامه</p>
+
+<div class="container">
+
+    <div class="header">
+        <h1>🏡 زمین‌یار</h1>
+        <p>محاسبه و ترسیم تقریبی زمین</p>
+    </div>
+
+    <div class="card">
+        <div class="inputs">
+
+            <div class="input-box">
+                <label>عرض جلو (A) ـ متر</label>
+                <input id="A" type="number" min="0" step="0.1" value="20">
+            </div>
+
+            <div class="input-box">
+                <label>عرض عقب (B) ـ متر</label>
+                <input id="B" type="number" min="0" step="0.1" value="18">
+            </div>
+
+            <div class="input-box">
+                <label>طول راست (H) ـ متر</label>
+                <input id="H" type="number" min="0" step="0.1" value="30">
+            </div>
+
+            <div class="input-box">
+                <label>طول چپ (D) ـ متر</label>
+                <input id="D" type="number" min="0" step="0.1" value="28">
+            </div>
+
+        </div>
+    </div>
+
+    <div class="card">
+        <svg id="landSvg" viewBox="0 0 600 400">
+
+            <polygon id="land" class="land" points=""></polygon>
+
+            <text id="labelA" class="side-label"></text>
+            <text id="labelB" class="side-label"></text>
+            <text id="labelH" class="side-label"></text>
+            <text id="labelD" class="side-label"></text>
+
+        </svg>
+
+        <div class="land-area">
+            مساحت تقریبی:
+            <span id="area">0</span>
+            مترمربع
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="buttons">
+            <button class="save" onclick="saveData()">💾 ذخیره</button>
+            <button class="clear" onclick="clearData()">🗑 پاک کردن</button>
+            <button class="reset" onclick="resetData()">↩ بازنشانی</button>
+        </div>
+    </div>
+
+    <div class="card note">
+        این نسخه، مساحت را به صورت تقریبی بر اساس میانگین دو عرض
+        و میانگین دو طول محاسبه می‌کند.
+    </div>
+
+</div>
+
+<script>
+
+const A = document.getElementById("A");
+const B = document.getElementById("B");
+const H = document.getElementById("H");
+const D = document.getElementById("D");
+
+const land = document.getElementById("land");
+
+const labelA = document.getElementById("labelA");
+const labelB = document.getElementById("labelB");
+const labelH = document.getElementById("labelH");
+const labelD = document.getElementById("labelD");
+
+const area = document.getElementById("area");
+
+function numberValue(input) {
+    const value = parseFloat(input.value);
+    return isNaN(value) || value < 0 ? 0 : value;
+}
+
+function updateLand() {
+
+    const a = numberValue(A);
+    const b = numberValue(B);
+    const h = numberValue(H);
+    const d = numberValue(D);
+
+    const maxWidth = Math.max(a, b, 1);
+    const maxHeight = Math.max(h, d, 1);
+
+    const scaleX = 480 / maxWidth;
+    const scaleY = 280 / maxHeight;
+
+    const scale = Math.min(scaleX, scaleY);
+
+    const front = a * scale;
+    const back = b * scale;
+    const right = h * scale;
+    const left = d * scale;
+
+    const centerX = 300;
+
+    const bottomY = 330;
+    const topY = 70;
+
+    const bottomLeft = centerX - front / 2;
+    const bottomRight = centerX + front / 2;
+
+    const topLeft = centerX - back / 2;
+    const topRight = centerX + back / 2;
+
+    const points =
+        `${bottomLeft},${bottomY}
+         ${bottomRight},${bottomY}
+         ${topRight},${topY}
+         ${topLeft},${topY}`;
+
+    land.setAttribute("points", points);
+
+    labelA.setAttribute("x", centerX);
+    labelA.setAttribute("y", bottomY + 35);
+    labelA.setAttribute("text-anchor", "middle");
+    labelA.textContent = `A = ${a} m`;
+
+    labelB.setAttribute("x", centerX);
+    labelB.setAttribute("y", topY - 18);
+    labelB.setAttribute("text-anchor", "middle");
+    labelB.textContent = `B = ${b} m`;
+
+    labelH.setAttribute("x", bottomRight + 12);
+    labelH.setAttribute("y", 205);
+    labelH.setAttribute("text-anchor", "start");
+    labelH.textContent = `H = ${h} m`;
+
+    labelD.setAttribute("x", bottomLeft - 12);
+    labelD.setAttribute("y", 205);
+    labelD.setAttribute("text-anchor", "end");
+    labelD.textContent = `D = ${d} m`;
+
+    const approximateArea =
+        ((a + b) / 2) * ((h + d) / 2);
+
+    area.textContent = approximateArea.toFixed(2);
+}
+
+function saveData() {
+
+    const data = {
+        A: A.value,
+        B: B.value,
+        H: H.value,
+        D: D.value
+    };
+
+    localStorage.setItem("zaminYarData", JSON.stringify(data));
+
+    alert("اطلاعات زمین ذخیره شد ✅");
+}
+
+function clearData() {
+
+    A.value = "";
+    B.value = "";
+    H.value = "";
+    D.value = "";
+
+    updateLand();
+}
+
+function resetData() {
+
+    A.value = 20;
+    B.value = 18;
+    H.value = 30;
+    D.value = 28;
+
+    updateLand();
+}
+
+function loadData() {
+
+    const saved = localStorage.getItem("zaminYarData");
+
+    if (!saved) {
+        updateLand();
+        return;
+    }
+
+    const data = JSON.parse(saved);
+
+    A.value = data.A;
+    B.value = data.B;
+    H.value = data.H;
+    D.value = data.D;
+
+    updateLand();
+}
+
+[A, B, H, D].forEach(input => {
+    input.addEventListener("input", updateLand);
+});
+
+loadData();
+
+</script>
+
 </body>
 </html>
