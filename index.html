@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>زمین‌یار</title>
+<title>زمین‌یار | نسخه ۱.۱</title>
 
 <style>
 * {
@@ -12,41 +12,43 @@
 
 body {
     margin: 0;
+    background: #f2f4f7;
     font-family: Tahoma, Arial, sans-serif;
-    background: #f3f5f7;
-    color: #222;
+    color: #202124;
 }
 
 .container {
-    width: min(94%, 700px);
-    margin: 20px auto;
+    width: 94%;
+    max-width: 700px;
+    margin: 18px auto;
 }
 
 .header {
     background: #1f2937;
     color: white;
-    padding: 18px;
-    border-radius: 16px;
     text-align: center;
+    padding: 18px;
+    border-radius: 18px;
     margin-bottom: 15px;
 }
 
 .header h1 {
     margin: 0 0 6px;
-    font-size: 25px;
+    font-size: 26px;
 }
 
 .header p {
     margin: 0;
+    font-size: 14px;
     opacity: .85;
 }
 
 .card {
     background: white;
-    border-radius: 16px;
+    border-radius: 18px;
     padding: 16px;
     margin-bottom: 15px;
-    box-shadow: 0 3px 12px rgba(0,0,0,.08);
+    box-shadow: 0 3px 14px rgba(0,0,0,.08);
 }
 
 .inputs {
@@ -63,53 +65,62 @@ body {
 
 .input-box input {
     width: 100%;
-    padding: 12px;
     border: 1px solid #ccd2d8;
-    border-radius: 10px;
-    font-size: 16px;
+    border-radius: 11px;
+    padding: 12px;
+    font-size: 17px;
     text-align: center;
+    outline: none;
 }
 
-.land-area {
-    text-align: center;
-    font-size: 22px;
-    font-weight: bold;
-    margin-top: 10px;
+.input-box input:focus {
+    border-color: #2563eb;
 }
 
 svg {
+    display: block;
     width: 100%;
     height: 360px;
     background: #fafafa;
-    border-radius: 14px;
     border: 1px solid #ddd;
+    border-radius: 15px;
 }
 
 .land {
     fill: #dcefd8;
-    stroke: #216e39;
+    stroke: #176b38;
     stroke-width: 3;
 }
 
 .side-label {
     font-size: 16px;
     font-weight: bold;
-    fill: #111;
+    fill: #202124;
+}
+
+.area-box {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 21px;
+    font-weight: bold;
+}
+
+.area-number {
+    color: #176b38;
 }
 
 .buttons {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+    gap: 9px;
 }
 
 button {
-    border: none;
-    border-radius: 10px;
-    padding: 12px 8px;
+    border: 0;
+    border-radius: 11px;
+    padding: 13px 8px;
     font-size: 15px;
     font-weight: bold;
-    cursor: pointer;
 }
 
 .save {
@@ -131,16 +142,16 @@ button {
     text-align: center;
     color: #666;
     font-size: 13px;
-    line-height: 1.8;
+    line-height: 1.9;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 520px) {
     .inputs {
         grid-template-columns: 1fr;
     }
 
     svg {
-        height: 300px;
+        height: 310px;
     }
 
     .buttons {
@@ -156,39 +167,42 @@ button {
 
     <div class="header">
         <h1>🏡 زمین‌یار</h1>
-        <p>محاسبه و ترسیم تقریبی زمین</p>
+        <p>ترسیم و محاسبه تقریبی زمین</p>
     </div>
 
     <div class="card">
+
         <div class="inputs">
 
             <div class="input-box">
-                <label>عرض جلو (A) ـ متر</label>
+                <label>عرض جلو A (متر)</label>
                 <input id="A" type="number" min="0" step="0.1" value="20">
             </div>
 
             <div class="input-box">
-                <label>عرض عقب (B) ـ متر</label>
+                <label>عرض عقب B (متر)</label>
                 <input id="B" type="number" min="0" step="0.1" value="18">
             </div>
 
             <div class="input-box">
-                <label>طول راست (H) ـ متر</label>
+                <label>طول راست H (متر)</label>
                 <input id="H" type="number" min="0" step="0.1" value="30">
             </div>
 
             <div class="input-box">
-                <label>طول چپ (D) ـ متر</label>
+                <label>طول چپ D (متر)</label>
                 <input id="D" type="number" min="0" step="0.1" value="28">
             </div>
 
         </div>
+
     </div>
 
     <div class="card">
-        <svg id="landSvg" viewBox="0 0 600 400">
 
-            <polygon id="land" class="land" points=""></polygon>
+        <svg viewBox="0 0 600 400">
+
+            <polygon id="land" class="land"></polygon>
 
             <text id="labelA" class="side-label"></text>
             <text id="labelB" class="side-label"></text>
@@ -197,24 +211,27 @@ button {
 
         </svg>
 
-        <div class="land-area">
+        <div class="area-box">
             مساحت تقریبی:
-            <span id="area">0</span>
+            <span id="area" class="area-number">0</span>
             مترمربع
         </div>
+
     </div>
 
     <div class="card">
+
         <div class="buttons">
             <button class="save" onclick="saveData()">💾 ذخیره</button>
             <button class="clear" onclick="clearData()">🗑 پاک کردن</button>
             <button class="reset" onclick="resetData()">↩ بازنشانی</button>
         </div>
+
     </div>
 
     <div class="card note">
-        این نسخه، مساحت را به صورت تقریبی بر اساس میانگین دو عرض
-        و میانگین دو طول محاسبه می‌کند.
+        در این نسخه، زمین به‌صورت یک چهارضلعی سازگار با
+        چهار اندازه ورودی ترسیم می‌شود و مساحت به‌صورت تقریبی محاسبه می‌گردد.
     </div>
 
 </div>
@@ -235,75 +252,204 @@ const labelD = document.getElementById("labelD");
 
 const area = document.getElementById("area");
 
-function numberValue(input) {
-    const value = parseFloat(input.value);
-    return isNaN(value) || value < 0 ? 0 : value;
+
+function getValue(element) {
+
+    const value = parseFloat(element.value);
+
+    if (!Number.isFinite(value) || value < 0) {
+        return 0;
+    }
+
+    return value;
 }
+
 
 function updateLand() {
 
-    const a = numberValue(A);
-    const b = numberValue(B);
-    const h = numberValue(H);
-    const d = numberValue(D);
+    const a = getValue(A);
+    const b = getValue(B);
+    const h = getValue(H);
+    const d = getValue(D);
 
-    const maxWidth = Math.max(a, b, 1);
-    const maxHeight = Math.max(h, d, 1);
+    if (a <= 0 || b <= 0 || h <= 0 || d <= 0) {
 
-    const scaleX = 480 / maxWidth;
-    const scaleY = 280 / maxHeight;
+        land.setAttribute("points", "");
 
-    const scale = Math.min(scaleX, scaleY);
+        area.textContent = "0";
 
-    const front = a * scale;
-    const back = b * scale;
-    const right = h * scale;
-    const left = d * scale;
+        return;
+    }
 
-    const centerX = 300;
 
-    const bottomY = 330;
-    const topY = 70;
+    /*
+      مدل هندسی:
+      ضلع A در پایین قرار می‌گیرد.
+      ضلع B در بالا قرار می‌گیرد.
+      H و D دو ضلع جانبی هستند.
 
-    const bottomLeft = centerX - front / 2;
-    const bottomRight = centerX + front / 2;
+      برای رسم پایدار، ارتفاع چهارضلعی از رابطه
+      مربوط به اختلاف دو ضلع جانبی و اختلاف دو قاعده
+      به‌صورت تقریبی به دست می‌آید.
+    */
 
-    const topLeft = centerX - back / 2;
-    const topRight = centerX + back / 2;
+    const baseDifference = b - a;
 
-    const points =
-        `${bottomLeft},${bottomY}
-         ${bottomRight},${bottomY}
-         ${topRight},${topY}
-         ${topLeft},${topY}`;
+    const sideDifference = d * d - h * h;
 
-    land.setAttribute("points", points);
+    let horizontalShift = 0;
 
-    labelA.setAttribute("x", centerX);
-    labelA.setAttribute("y", bottomY + 35);
+    if (Math.abs(baseDifference) > 0.0001) {
+
+        horizontalShift =
+            (sideDifference - baseDifference * baseDifference)
+            / (2 * baseDifference);
+
+    }
+
+
+    let heightSquared =
+        h * h - horizontalShift * horizontalShift;
+
+
+    /*
+      اگر حالت بالا از نظر هندسی ممکن نباشد،
+      از میانگین دو طول برای نمایش پایدار استفاده می‌کنیم.
+    */
+
+    let height;
+
+    if (heightSquared > 0) {
+
+        height = Math.sqrt(heightSquared);
+
+    } else {
+
+        height = (h + d) / 2;
+
+    }
+
+
+    /*
+      مختصات واقعی اولیه
+    */
+
+    const x1 = 0;
+    const y1 = 0;
+
+    const x2 = a;
+    const y2 = 0;
+
+    const x4 = horizontalShift;
+    const y4 = height;
+
+    const x3 = x4 + b;
+    const y3 = height;
+
+
+    /*
+      مقیاس برای قرار گرفتن داخل SVG
+    */
+
+    const minX = Math.min(x1, x2, x3, x4);
+    const maxX = Math.max(x1, x2, x3, x4);
+
+    const minY = Math.min(y1, y3, y4);
+    const maxY = Math.max(y1, y3, y4);
+
+    const width = Math.max(maxX - minX, 1);
+    const heightRange = Math.max(maxY - minY, 1);
+
+    const scale =
+        Math.min(
+            480 / width,
+            280 / heightRange
+        );
+
+
+    const offsetX = 300 - ((minX + maxX) / 2) * scale;
+    const offsetY = 330 - maxY * scale;
+
+
+    function transform(x, y) {
+
+        return [
+            x * scale + offsetX,
+            offsetY - y * scale
+        ];
+
+    }
+
+
+    const p1 = transform(x1, y1);
+    const p2 = transform(x2, y2);
+    const p3 = transform(x3, y3);
+    const p4 = transform(x4, y4);
+
+
+    land.setAttribute(
+        "points",
+        `${p1[0]},${p1[1]}
+         ${p2[0]},${p2[1]}
+         ${p3[0]},${p3[1]}
+         ${p4[0]},${p4[1]}`
+    );
+
+
+    /*
+      برچسب‌ها
+    */
+
+    labelA.setAttribute("x", (p1[0] + p2[0]) / 2);
+    labelA.setAttribute("y", (p1[1] + p2[1]) / 2 + 30);
     labelA.setAttribute("text-anchor", "middle");
     labelA.textContent = `A = ${a} m`;
 
-    labelB.setAttribute("x", centerX);
-    labelB.setAttribute("y", topY - 18);
+
+    labelB.setAttribute("x", (p3[0] + p4[0]) / 2);
+    labelB.setAttribute("y", (p3[1] + p4[1]) / 2 - 15);
     labelB.setAttribute("text-anchor", "middle");
     labelB.textContent = `B = ${b} m`;
 
-    labelH.setAttribute("x", bottomRight + 12);
-    labelH.setAttribute("y", 205);
+
+    labelH.setAttribute("x", (p2[0] + p3[0]) / 2 + 12);
+    labelH.setAttribute("y", (p2[1] + p3[1]) / 2);
     labelH.setAttribute("text-anchor", "start");
     labelH.textContent = `H = ${h} m`;
 
-    labelD.setAttribute("x", bottomLeft - 12);
-    labelD.setAttribute("y", 205);
+
+    labelD.setAttribute("x", (p1[0] + p4[0]) / 2 - 12);
+    labelD.setAttribute("y", (p1[1] + p4[1]) / 2);
     labelD.setAttribute("text-anchor", "end");
     labelD.textContent = `D = ${d} m`;
 
-    const approximateArea =
-        ((a + b) / 2) * ((h + d) / 2);
 
-    area.textContent = approximateArea.toFixed(2);
+    /*
+      مساحت چهارضلعی با فرمول Shoelace
+    */
+
+    const calculatedArea =
+        Math.abs(
+            (
+                x1 * y2 +
+                x2 * y3 +
+                x3 * y4 +
+                x4 * y1 -
+                (
+                    y1 * x2 +
+                    y2 * x3 +
+                    y3 * x4 +
+                    y4 * x1
+                )
+            ) / 2
+        );
+
+
+    area.textContent =
+        calculatedArea.toFixed(2);
+
 }
+
 
 function saveData() {
 
@@ -314,10 +460,15 @@ function saveData() {
         D: D.value
     };
 
-    localStorage.setItem("zaminYarData", JSON.stringify(data));
+    localStorage.setItem(
+        "zaminYarData",
+        JSON.stringify(data)
+    );
 
     alert("اطلاعات زمین ذخیره شد ✅");
+
 }
+
 
 function clearData() {
 
@@ -327,7 +478,9 @@ function clearData() {
     D.value = "";
 
     updateLand();
+
 }
+
 
 function resetData() {
 
@@ -337,30 +490,51 @@ function resetData() {
     D.value = 28;
 
     updateLand();
+
 }
+
 
 function loadData() {
 
-    const saved = localStorage.getItem("zaminYarData");
+    const saved =
+        localStorage.getItem("zaminYarData");
 
     if (!saved) {
+
         updateLand();
+
         return;
+
     }
 
-    const data = JSON.parse(saved);
+    try {
 
-    A.value = data.A;
-    B.value = data.B;
-    H.value = data.H;
-    D.value = data.D;
+        const data =
+            JSON.parse(saved);
+
+        A.value = data.A;
+        B.value = data.B;
+        H.value = data.H;
+        D.value = data.D;
+
+    } catch (error) {
+
+        console.log("خطا در اطلاعات ذخیره شده");
+
+    }
 
     updateLand();
+
 }
 
-[A, B, H, D].forEach(input => {
-    input.addEventListener("input", updateLand);
-});
+
+[A, B, H, D].forEach(
+    input => input.addEventListener(
+        "input",
+        updateLand
+    )
+);
+
 
 loadData();
 
