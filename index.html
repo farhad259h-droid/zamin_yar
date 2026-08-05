@@ -393,7 +393,12 @@ function updateLand() {
 
 
     const offsetX = 300 - ((minX + maxX) / 2) * scale;
-    const offsetY = 330 - maxY * scale;
+
+// کمی فاصله از بالای کادر
+const topMargin = 25;
+
+// انتقال شکل به داخل محدوده SVG
+const offsetY = 330 - maxY * scale + topMargin;
 
 
     function transform(x, y) {
