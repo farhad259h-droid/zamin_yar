@@ -526,20 +526,43 @@ function renderSavedLands() {
         title.textContent = land.name || `زمین ${index + 1}`;
 
         const button = document.createElement("button");
-        button.textContent = "باز کردن";
+        const button = document.createElement("button");
+button.textContent = "باز کردن";
 
-        button.onclick = function () {
-            landName.value = land.name || "";
-            A.value = land.A;
-            B.value = land.B;
-            H.value = land.H;
-            D.value = land.D;
+button.onclick = function () {
+    landName.value = land.name || "";
+    A.value = land.A;
+    B.value = land.B;
+    H.value = land.H;
+    D.value = land.D;
 
-            updateLand();
-        };
+    updateLand();
+};
 
-        item.appendChild(title);
-        item.appendChild(button);
+const deleteButton = document.createElement("button");
+deleteButton.textContent = "🗑 حذف";
+
+deleteButton.style.background = "#dc2626";
+deleteButton.style.color = "white";
+
+deleteButton.onclick = function () {
+
+    if (!confirm("این زمین حذف شود؟")) {
+        return;
+    }
+
+    savedLands.splice(index, 1);
+
+    localStorage.setItem(
+        "zaminYarLands",
+        JSON.stringify(savedLands)
+    );
+
+    renderSavedLands();
+};
+
+item.appendChild(button);
+item.appendChild(deleteButton);
 
         list.appendChild(item);
     });
