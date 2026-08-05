@@ -480,24 +480,68 @@ const const offsetY = 310 - maxY * scale;
 
 }
 
+let savedLands = JSON.parse(
+    localStorage.getItem("zaminYarLands") || "[]"
+);
 
+function renderSavedLands() {
+
+    const list = document.getElementById("landsList");
+
+    if (!savedLands.length) {
+        list.innerHTML = '<div class="no-land">هنوز زمینی ذخیره نشده است.</div>';
+        return;
+    }
+
+    list.innerHTML = "";
+
+    savedLands.forEach((land, index) => {
+
+        const item = document.createElement("div");
+        item.className = "land-item";
+
+        const title = document.createElement("span");
+        title.textContent = land.name || `زمین ${index + 1}`;
+
+        const button = document.createElement("button");
+        button.textContent = "باز کردن";
+
+        button.onclick = function () {
+            landName.value = land.name || "";
+            A.value = land.A;
+            B.value = land.B;
+            H.value = land.H;
+            D.value = land.D;
+
+            updateLand();
+        };
+
+        item.appendChild(title);
+        item.appendChild(button);
+
+        list.appendChild(item);
+    });
+}
 function saveData() {
 
     const data = {
-    name: landName.value,
-    A: A.value,
-    B: B.value,
-    H: H.value,
-    D: D.value
-};
+        name: landName.value.trim() || "زمین بدون نام",
+        A: A.value,
+        B: B.value,
+        H: H.value,
+        D: D.value
+    };
+
+    savedLands.push(data);
 
     localStorage.setItem(
-        "zaminYarData",
-        JSON.stringify(data)
+        "zaminYarLands",
+        JSON.stringify(savedLands)
     );
 
-    alert("اطلاعات زمین ذخیره شد ✅");
+    renderSavedLands();
 
+    alert("زمین با موفقیت ذخیره شد ✅");
 }
 
 
@@ -568,7 +612,7 @@ landName.value = data.name || "";
 
 
 loadData();
-
+renderSavedLands();
 </script>
 
 </body>
