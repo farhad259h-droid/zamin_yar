@@ -50,7 +50,29 @@ body {
     margin-bottom: 15px;
     box-shadow: 0 3px 14px rgba(0,0,0,.08);
 }
+.name-box {
+    margin-bottom: 14px;
+}
 
+.name-box label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.name-box input {
+    width: 100%;
+    border: 1px solid #ccd2d8;
+    border-radius: 11px;
+    padding: 12px;
+    font-size: 17px;
+    text-align: right;
+    outline: none;
+}
+
+.name-box input:focus {
+    border-color: #2563eb;
+}
 .inputs {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -171,7 +193,10 @@ button {
     </div>
 
     <div class="card">
-
+<div class="name-box">
+    <label>نام زمین</label>
+    <input id="landName" type="text" placeholder="مثلاً زمین ۳۲۳ متری طبرسی">
+</div>
         <div class="inputs">
 
             <div class="input-box">
@@ -237,7 +262,7 @@ button {
 </div>
 
 <script>
-
+const landName = document.getElementById("landName");
 const A = document.getElementById("A");
 const B = document.getElementById("B");
 const H = document.getElementById("H");
@@ -454,11 +479,12 @@ function updateLand() {
 function saveData() {
 
     const data = {
-        A: A.value,
-        B: B.value,
-        H: H.value,
-        D: D.value
-    };
+    name: landName.value,
+    A: A.value,
+    B: B.value,
+    H: H.value,
+    D: D.value
+};
 
     localStorage.setItem(
         "zaminYarData",
@@ -511,7 +537,7 @@ function loadData() {
 
         const data =
             JSON.parse(saved);
-
+landName.value = data.name || "";
         A.value = data.A;
         B.value = data.B;
         H.value = data.H;
